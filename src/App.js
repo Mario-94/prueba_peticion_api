@@ -1,25 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import express from 'express'
+import config from './config'
+import getOfertas from './routes/products.routes'
+import cors from 'cors';
+const app = express()
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+//settings 
+app.set('port', config.port)
+app.use(getOfertas,);
+// app.use(cors(
+//     confi.application.cors.server
+// ));
+export default app;
