@@ -2,9 +2,9 @@ import express from 'express'
 import config from './config'
 import getOfertas from './routes/products.routes'
 import cors from 'cors'
-
 const app = express()
 const whitelist = ['http://localhost:3000' ]
+//Esta se utilizara para el cuando subamos la api
 const corsOptions = {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
@@ -15,7 +15,10 @@ const corsOptions = {
     }
   }
 //settings 
-app.use(cors(corsOptions))
+// Esta es la linea original la  otra es de prueba
+//app.use(cors(corsOptions))
+// para pruebas pse pondra la siguiente linea
+app.use(cors())
 app.set('port', config.port)
 app.use(getOfertas);
 
