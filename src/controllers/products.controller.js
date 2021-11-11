@@ -5,7 +5,7 @@ export const getOfertas = async (req, res) => {
         try {
                 const pool = await getConnection();
                 const result = await pool.request().query(`
-                SELECT
+                SELECT top (15)
                 /*En esta parte pondremos las columnas de la tabla ofertasD*/
                         oferta.ID,
                         oferta.Articulo,
