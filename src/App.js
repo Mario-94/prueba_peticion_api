@@ -13,7 +13,7 @@ const corsOptions = {
         callback(new Error('Not allowed by CORS'))
       }
     }
-  }
+  } 
 //settings 
 // Esta es la linea original la  otra es de prueba
 //app.use(cors(corsOptions))
@@ -21,6 +21,8 @@ const corsOptions = {
 app.use(cors())
 app.set('port', config.port)
 app.use(getOfertas);
-
+//Esta es la parte de correo
+app.use(express.urlencoded({extended:false}))
+app.use(express.json())//este es para una aplicacion echa como en react js
 
 export default app;

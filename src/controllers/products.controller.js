@@ -1,5 +1,5 @@
-import { getConnection } from '../database/connection'
-import {config} from 'dotenv'
+import { getConnection } from '../database/connection';
+import { config } from 'dotenv';
 config();
 export const getOfertas = async (req, res) => {
         try {
@@ -33,9 +33,13 @@ export const getOfertas = async (req, res) => {
                 order by oferta.ID asc`);
                 const a = result.recordset;
                 // no se ocupa para que no se alente el api console.log(result.recordset);
-                res.json(a)
+                res.json(a);
         } catch (error) {
                 res.status(500);
                 res.send(error.message);
         }
-}
+};
+export const sendEmail = async (req, res) => {
+        console.log(req.body);
+        res.send('recivido');
+};
