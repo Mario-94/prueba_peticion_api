@@ -1,11 +1,12 @@
 import { getConnection } from '../database/connection';
+import nodemailer from 'nodemailer';
 import { config } from 'dotenv';
 config();
 export const getOfertas = async (req, res) => {
         try {
                 const pool = await getConnection();
                 const result = await pool.request().query(`
-                SELECT top (15)
+                SELECT
                 /*En esta parte pondremos las columnas de la tabla ofertasD*/
                         oferta.ID,
                         oferta.Articulo,
@@ -39,7 +40,31 @@ export const getOfertas = async (req, res) => {
                 res.send(error.message);
         }
 };
+
+//esta es la configuracion para enviar correos de queja
 export const sendEmail = async (req, res) => {
-        console.log(req.body);
-        res.send('recivido');
+        try {
+                // create reusable transporter object using the default SMTP transport
+                let transporter = nodemailer.createTransport({
+                        host: process.env.HOSTNAME, //el servidor de correo al que estamos suscritos
+                        port: 587, //puesto
+                        secure: false, // true for 465, false for other ports
+                        auth: {
+                                user: process.env.USERMAIL, // El usuario que nos dio el correo
+                                pass: process.env.PASSWORDMAIL, // Contraseña que pusimos para el usuario de arriba
+                        },
+                });
+
+                // send mail with defined transport object
+                let info = await transporter.sendMail({
+                        from: '"Fred Foo " <contacto@abattz.com>', // El correo que lo envia
+                        to: 'mags9415@gmail.com', // el correo destinatario
+                        subject: 'Hello ', //Asunto
+                        text: 'Hello world?', // mensaje
+                        // html: '<b>Hello world?</b>', // html body
+                });
+                res.send('enviado');
+        } catch (error) {
+                console.error(`${error}`);
+        }
 };
