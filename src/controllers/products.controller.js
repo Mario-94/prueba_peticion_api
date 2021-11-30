@@ -47,22 +47,29 @@ export const sendEmail = async (req, res) => {
                 // create reusable transporter object using the default SMTP transport
                 let transporter = nodemailer.createTransport({
                         host: process.env.HOSTNAME, //el servidor de correo al que estamos suscritos
-                        port: 587, //puesto
-                        secure: false, // true for 465, false for other ports
+                        port: 465, //puesto
+                        secure: true, // true for 465, false for other ports
                         auth: {
                                 user: process.env.USERMAIL, // El usuario que nos dio el correo
                                 pass: process.env.PASSWORDMAIL, // Contraseña que pusimos para el usuario de arriba
+                        },
+                        tls: {
+                                // do not fail on invalid certs
+                                rejectUnauthorized: false,
                         },
                 });
 
                 // send mail with defined transport object
                 let info = await transporter.sendMail({
-                        from: '"Fred Foo " <contacto@abattz.com>', // El correo que lo envia
-                        to: 'mags9415@gmail.com', // el correo destinatario
-                        subject: 'Hello ', //Asunto
-                        text: 'Hello world?', // mensaje
-                        // html: '<b>Hello world?</b>', // html body
+                        from: '<contacto@abattz.com>', // El correo que lo envia
+                        to: 'contacto@abattz.com', // el correo destinatario
+                        subject: 'Prueba de mensaje', //Asunto
+                        text: 'enviado desde la aplicacion', // mensaje
+                        html: '<b>Enviado... desde la computadora</b>', // html body
                 });
+
+                console.log('enviado');
+
                 res.send('enviado');
         } catch (error) {
                 console.error(`${error}`);
