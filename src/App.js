@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import config from './config';
 import getOfertas from './routes/products.routes';
 import cors from 'cors';
@@ -20,9 +21,12 @@ const corsOptions = {
 // para pruebas pse pondra la siguiente linea
 app.use(cors());
 app.set('port', config.port);
-app.use(getOfertas);
 //Esta es la parte de correo
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json()); //este es para una aplicacion echa como en react js
+/*en esta parte debemos checar que esta parte es la que se encarga de recibir archivos desde un formulario enviado desde http
+para eso es la primera linea*/
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); //este es para una aplicacion echa como en react js
+
+app.use(getOfertas);
 
 export default app;
