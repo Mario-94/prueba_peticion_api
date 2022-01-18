@@ -7,7 +7,7 @@ export const getOfertas = async (req, res) => {
                 const pool = await getConnection();
                 const result = await pool.request().query(`
                
- SELECT 
+SELECT 
 /*En esta parte pondremos las columnas de la tabla ofertasD*/
         oferta.ID,
         oferta.Articulo,
@@ -23,6 +23,8 @@ export const getOfertas = async (req, res) => {
         /*En esta parte pondremos las columnas de la tabla Articulos de esta traemos la descripcion y la linea a la que pertence*/
         articulo.Descripcion1,
         articulo.Linea,
+                oferta.Unidad,
+                oferta.Porcentaje,
         articulo.Unidad as UnidadVenta
 FROM [ABATZ].[dbo].OfertaD  As oferta
 INNER JOIN [ABATZ].[dbo].Oferta as vigencia
