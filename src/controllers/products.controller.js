@@ -7,34 +7,39 @@ export const getOfertas = async (req, res) => {
                 const pool = await getConnection();
                 const result = await pool.request().query(`
                
-SELECT 
+SELECT
 /*En esta parte pondremos las columnas de la tabla ofertasD*/
         oferta.ID,
         oferta.Articulo,
-        oferta.Unidad as UnidadCompra,
-        CostoBase,
-        /*En esta parte pondremos las columnas de la tabla Oferta donde tenemos el estatus de VIGENCIA*/
-        --vigencia.Articulo,
+--articulo.PrecioLista, se comentan estas dos lineas por que solo necesitamos por lo pronto
+--articulo.Precio2,
+        unidadReal.Lista,
+        unidadReal.Precio,
+/*En esta parte pondremos las columnas de la tabla Oferta donde tenemos el estatus de VIGENCIA*/--vigencia.Articulo,
         vigencia.Referencia,
-        /*vigencia.Unidad,*/
-        --vigencia.Empresa,
-        vigencia.MovID, --este es para saber quien fue el que dio de alta la oferta 
+/*vigencia.Unidad,*/--vigencia.Empresa,
         vigencia.Estatus,
-        /*En esta parte pondremos las columnas de la tabla Articulos de esta traemos la descripcion y la linea a la que pertence*/
+/*En esta parte pondremos las columnas de la tabla Articulos de esta traemos la descripcion y la linea a la que pertence*/
         articulo.Descripcion1,
         articulo.Linea,
-                oferta.Unidad,
-                oferta.Porcentaje,
-        articulo.Unidad as UnidadVenta
-FROM [ABATZ].[dbo].OfertaD  As oferta
-INNER JOIN [ABATZ].[dbo].Oferta as vigencia
-ON(oferta.ID = vigencia.ID)
-INNER JOIN [ABATZ].[dbo].Art as articulo
-ON articulo.Articulo = oferta.Articulo
-WHERE  vigencia.Estatus ='VIGENTE' and (vigencia.Referencia ='OFERTA PUEBLITA' or vigencia.Referencia ='OFERTA SUPER Y MOSTRADOR'
-or vigencia.Referencia= 'OFERTA ALMACEN y super' or vigencia.Referencia='PUEBLITA OFERTAS')
--- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
-order by oferta.ID asc`);
+        oferta.Unidad,
+        UnidadReal.Unidad,
+        oferta.Porcentaje 
+FROM
+        [ABATZ].[dbo].OfertaD AS oferta
+        INNER JOIN [ABATZ].[dbo].Oferta AS vigencia ON ( oferta.ID = vigencia.ID )
+        INNER JOIN [ABATZ].[dbo].Art AS articulo ON articulo.Articulo = oferta.Articulo
+        INNER JOIN [ABATZ].[dbo].ListaPreciosDUnidad AS unidadReal --renombramos la tabla ListapreciosD para traer la unidad real
+        ON ( articulo.Articulo= UnidadReal.Articulo ) 
+WHERE
+        vigencia.Estatus = 'VIGENTE' 
+        AND ( --vigencia.Referencia ='OFERTA PUEBLITA' 
+--or vigencia.Referencia ='OFERTA SUPER Y MOSTRADOR'
+--or se comentaron las demas lineas por que solo se necesitan mostrarse las listas de ofertas de almacen
+        vigencia.Referencia= 'OFERTA ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
+        
+ORDER BY
+        oferta.ID ASC`);
                 const a = result.recordset;
                 // no se ocupa para que no se alente el api console.log(result.recordset);
                 res.json(a);
