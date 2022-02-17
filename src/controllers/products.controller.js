@@ -5,7 +5,7 @@ config();
 export const getOfertas = async (req, res) => {
         try {
                 const pool = await getConnection();
-                const result = await pool.request().query(`
+const result = await pool.request().query(`
                
 SELECT
 /*En esta parte pondremos las columnas de la tabla ofertasD*/
@@ -22,7 +22,6 @@ SELECT
 /*En esta parte pondremos las columnas de la tabla Articulos de esta traemos la descripcion y la linea a la que pertence*/
         articulo.Descripcion1,
         articulo.Linea,
-        oferta.Unidad,
         UnidadReal.Unidad,
         oferta.Porcentaje 
 FROM
@@ -36,13 +35,25 @@ WHERE
         AND ( --vigencia.Referencia ='OFERTA PUEBLITA' 
 --or vigencia.Referencia ='OFERTA SUPER Y MOSTRADOR'
 --or se comentaron las demas lineas por que solo se necesitan mostrarse las listas de ofertas de almacen
-        vigencia.Referencia= 'OFERTA ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
+        vigencia.Referencia= 'OFERTAS ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
         
-ORDER BY
-        oferta.ID ASC`);
-                const a = result.recordset;
+ORDER BY articulo.Descripcion1
+         ASC`);
+const products= result.recordset;
+// realizan pruebas, peticion y paginado desde la aplicacion por eso se comento este codigo
+// const itemsPerPage=21;
+// const page=parseInt(req.query.page);
+// const start=(page-1)*itemsPerPage;
+// const end=page*itemsPerPage;
+// const total=products.length;
+// const items=products.slice(start,end)
+// const paginasTotales= Math.ceil(total/itemsPerPage);
+
+                
                 // no se ocupa para que no se alente el api console.log(result.recordset);
-                res.json(a);
+                
+                // res.json({items,paginasTotales});
+                res.json({products})
         } catch (error) {
                 res.status(500);
                 res.send(error.message);
