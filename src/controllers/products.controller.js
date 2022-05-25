@@ -1,6 +1,6 @@
 import { getConnection } from "../database/connection";
 import nodemailer from "nodemailer";
-import { config } from "dotenv";
+import {config} from 'dotenv'
 config();
 export const getOfertas = async (req, res) => {
         try {
@@ -35,7 +35,7 @@ WHERE
         AND ( --vigencia.Referencia ='OFERTA PUEBLITA' 
 --or vigencia.Referencia ='OFERTA SUPER Y MOSTRADOR'
 --or se comentaron las demas lineas por que solo se necesitan mostrarse las listas de ofertas de almacen
-        vigencia.Referencia= 'OFERTAS ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
+        vigencia.Referencia= 'OFERTA ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
         
 ORDER BY articulo.Descripcion1
          ASC`);
@@ -62,15 +62,20 @@ const products= result.recordset;
 
 //esta es la configuracion para enviar correos de queja
 export const sendEmail = async (req, res) => {
+       
         try {
-                //destrucuramos los datos de esta manera para poder acceder a cada lado del apartado de nuestos datos enviados como es el firstName email por decir algunos de los que estan precentes
-                const { firstName, lastName, phoneNumber, email, description } =
-                        req.body.datos;
 
-                // en esta parte hacemosun forulario para el envio del formulario de los datos al correo ya con los datos del formulario de la pagina
+                const { opcion,firstName, lastName, phoneNumber, email, description } =
+                        req.body.datos;
+               
+                //destrucuramos los datos de esta manera para poder acceder a cada lado del apartado de nuestos datos enviados como es el firstName email por decir algunos de los que estan precentes
+                
+              
+                // en esta parte hacemosun formulario para el envio del formulario de los datos al correo ya con los datos del formulario de la pagina
                 let contentHTML = `
                 <h1>Información del usuario</h1>
                 <ul>
+                <li>Name: ${opcion}</li>
                 <li>Name: ${firstName}</li>
                 <li>lastName: ${lastName}</li>
                 <li>User Email: ${email}</li>
@@ -79,6 +84,8 @@ export const sendEmail = async (req, res) => {
                 <h2>Mensaje</h2>
                 <p>${description}</p>
                 `;
+
+
                 // create reusable transporter object using the default SMTP transport
                 let transporter = nodemailer.createTransport({
                         host: process.env.HOSTNAME, //el servidor de correo al que estamos suscritos
@@ -94,17 +101,16 @@ export const sendEmail = async (req, res) => {
                         },
                 });
 
+
                 // send mail with defined transport object
                 let info = await transporter.sendMail({
                         from: "Pagina <contacto@abattz.com>", // El correo que lo envia
                         to: "contacto@abattz.com", // el correo destinatario
-                        subject: "Prueba de mensaje", //Asunto
+                        subject: "Mensaje desde página web", //Asunto
                         text: "enviado desde la aplicacion", // mensaje
                         html: contentHTML, // Este es el formulario que creamos arriba y acomodamos deacuerdo a nuestros datos enviados desde la pagina
                 });
-
                 console.log("enviado");
-
                 res.send("enviado");
         } catch (error) {
                 console.error(`${error}`);
