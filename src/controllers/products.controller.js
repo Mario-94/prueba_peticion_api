@@ -35,7 +35,7 @@ WHERE
         AND ( --vigencia.Referencia ='OFERTA PUEBLITA' 
 --or vigencia.Referencia ='OFERTA SUPER Y MOSTRADOR'
 --or se comentaron las demas lineas por que solo se necesitan mostrarse las listas de ofertas de almacen
-        vigencia.Referencia= 'OFERTA ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
+        vigencia.Referencia= 'OFERTAS ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
         
 ORDER BY articulo.Descripcion1
          ASC`);
