@@ -116,3 +116,7 @@ export const sendEmail = async (req, res) => {
                 console.error(`${error}`);
         }
 };
+
+export const holaMundo= async (req, res) =>{
+        res.send("holaMundo");
+}
