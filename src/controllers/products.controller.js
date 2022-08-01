@@ -6,7 +6,6 @@ export const getOfertas = async (req, res) => {
         try {
                 const pool = await getConnection();
 const result = await pool.request().query(`
-               
 SELECT
 /*En esta parte pondremos las columnas de la tabla ofertasD*/
         oferta.ID,
@@ -16,9 +15,13 @@ SELECT
         unidadReal.Lista,
         unidadReal.Precio,
 /*En esta parte pondremos las columnas de la tabla Oferta donde tenemos el estatus de VIGENCIA*/--vigencia.Articulo,
-        vigencia.Referencia,
 /*vigencia.Unidad,*/--vigencia.Empresa,
         vigencia.Estatus,
+        vigencia.Concepto,
+                                CONVERT(varchar, vigencia.FechaD,6) as [fechaInicio]
+                                ,
+                                CONVERT(varchar, vigencia.FechaA,6) as [fechaFin],
+                                
 /*En esta parte pondremos las columnas de la tabla Articulos de esta traemos la descripcion y la linea a la que pertence*/
         articulo.Descripcion1,
         articulo.Linea,
@@ -35,7 +38,7 @@ WHERE
         AND ( --vigencia.Referencia ='OFERTA PUEBLITA' 
 --or vigencia.Referencia ='OFERTA SUPER Y MOSTRADOR'
 --or se comentaron las demas lineas por que solo se necesitan mostrarse las listas de ofertas de almacen
-        vigencia.Referencia= 'OFERTAS ALMACEN' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
+        vigencia.Concepto= 'GENERAL' and unidadReal.Unidad= oferta.Unidad and unidadReal.Lista='(Precio 3)' ) -- falta expecificar  y estandarizar las referencias and (vigencia.Referencia ='pueblita' OR vigencia.Referencia ='mostrador')
         
 ORDER BY articulo.Descripcion1
          ASC`);
